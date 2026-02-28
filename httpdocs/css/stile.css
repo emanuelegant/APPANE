@@ -1,0 +1,412 @@
+/* Reset e Variabili BASE (Niente Framework) */
+:root {
+    --primary-color: #8b5a2b;
+    /* Marrone "Crosta di pane" */
+    --secondary-color: #d2b48c;
+    /* Tan/Beige chiaro */
+    --accent-color: #d35400;
+    /* Arancio scuro cromatico per inviti all'azione (Azzima) */
+    --bg-color: #fcf9f2;
+    /* Sfondo bianco caldo farina */
+    --text-color: #3e2723;
+    /* Marrone molto scuro per testi leggibili */
+    --error-color: #c0392b;
+    --success-color: #27ae60;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* HEADER & NAVBAR */
+.main-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1rem 0;
+    box-shadow: var(--box-shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    /* Per il mobile */
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+    letter-spacing: 2px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.nav-links a {
+    color: #fcf9f2;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: var(--secondary-color);
+}
+
+.cart-link {
+    background-color: var(--secondary-color);
+    color: var(--text-color) !important;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.cart-badge {
+    background-color: var(--accent-color);
+    color: white;
+    padding: 0.1rem 0.4rem;
+    border-radius: 50%;
+    font-size: 0.9rem;
+}
+
+.welcome-msg {
+    font-style: italic;
+    opacity: 0.9;
+}
+
+/* CONTAINER PRINCIPALE */
+.main-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    flex: 1;
+    /* Spinge il footer in basso */
+}
+
+/* FOOTER */
+.main-footer {
+    background-color: var(--text-color);
+    color: #ccc;
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: auto;
+}
+
+/* BANNER ORDINI CHIUSI */
+.banner-closed {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    padding: 1rem;
+    text-align: center;
+    border-radius: var(--border-radius);
+    margin-bottom: 2rem;
+    font-weight: bold;
+    border: 2px solid var(--primary-color);
+}
+
+/* GRIGLIA PRODOTTI (Home Page) */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+.product-card {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--box-shadow);
+    display: flex;
+    flex-direction: column;
+    border-top: 5px solid var(--primary-color);
+    transition: transform 0.2s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-type {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.product-name {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+.product-ingredients {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+    /* Spinge il prezzo e bottone in fondo */
+}
+
+.product-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.product-price {
+    font-size: 1.2rem;
+    color: var(--accent-color);
+}
+
+/* BOTTONI (Form e Carrello) */
+.btn {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    background-color: var(--primary-color);
+    color: white;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.btn:hover {
+    background-color: #6f4721;
+}
+
+.btn-accent {
+    background-color: var(--accent-color);
+}
+
+.btn-accent:hover {
+    background-color: #b34700;
+}
+
+.btn-danger {
+    background-color: var(--error-color);
+}
+
+.btn-danger:hover {
+    background-color: #a02e22;
+}
+
+/* CONTROLLI QUANTITA (Home / Carrello) */
+.qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.qty-btn {
+    width: 35px;
+    height: 35px;
+    border: 1px solid var(--primary-color);
+    background-color: transparent;
+    color: var(--primary-color);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qty-btn:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.qty-input {
+    width: 50px;
+    text-align: center;
+    height: 35px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+/* FORMS (Login, Registrazione, Checkout) */
+.form-container {
+    max-width: 500px;
+    margin: 0 auto;
+    background: white;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit;
+}
+
+.form-group input:focus {
+    outline: 2px solid var(--primary-color);
+    border-color: transparent;
+}
+
+.form-error,
+.errore {
+    color: var(--error-color);
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-top: 4px;
+    display: block;
+}
+
+.campo-errore {
+    border: 2px solid var(--error-color) !important;
+    outline: 2px solid var(--error-color) !important;
+    background-color: #ffe6e6 !important;
+}
+
+/* CARRELLO / TABELLE */
+.cart-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background: white;
+    box-shadow: var(--box-shadow);
+}
+
+.cart-table th,
+.cart-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.cart-table th {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+}
+
+.cart-total {
+    text-align: right;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 1.5rem;
+    color: var(--text-color);
+}
+
+.cart-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/* MESSAGGI (Success/Error) */
+.alert {
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}
+
+.alert-success {
+    background-color: #e8f8f5;
+    color: var(--success-color);
+    border: 1px solid var(--success-color);
+}
+
+.alert-error {
+    background-color: #fadbd8;
+    color: var(--error-color);
+    border: 1px solid var(--error-color);
+}
+
+/* UTILS */
+.text-center {
+    text-align: center;
+}
+
+.mt-1 {
+    margin-top: 1rem;
+}
+
+.mt-2 {
+    margin-top: 2rem;
+}
+
+.mb-1 {
+    margin-bottom: 1rem;
+}
+
+.mb-2 {
+    margin-bottom: 2rem;
+}
+
+/* MEDIA QUERIES (Mobile First) */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        gap: 0.8rem;
+        width: 100%;
+    }
+
+    .cart-link {
+        width: 100%;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+}
