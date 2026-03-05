@@ -28,7 +28,7 @@ require_once __DIR__ . '/include/header.php';
 <?php if (!$isOrderActive): ?>
     <div class="banner-closed">
         ⏳ Gli ordini sono chiusi. <br>
-        Accettiamo ordini dal Lunedì al Giovedì entro le 23:59 per le consegne del weekend.
+        Accettiamo ordini dal Mercoledì al Giovedì entro le 23:59 per le consegne del Venerdì.
     </div>
 <?php endif; ?>
 

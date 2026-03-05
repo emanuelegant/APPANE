@@ -19,7 +19,7 @@ function is_logged_in(): bool
 function is_order_open(): bool
 {
     $current_day = (int)date('N');
-    return $current_day >= 1 && $current_day <= 4;
+    return $current_day >= 3 && $current_day <= 4;
     return true;
 
 }
