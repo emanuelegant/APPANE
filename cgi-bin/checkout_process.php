@@ -13,7 +13,6 @@ if (!$is_guest && !is_logged_in()) {
     exit;
 }
 
-// Classe Stato
 class FormCheckout {
     public ?string $nome = null;
     public ?string $nome_err = null;
@@ -38,7 +37,6 @@ class FormCheckout {
 
 $guest_data = [];
 
-// 1. Validazione dati Ospite usando il Pattern PCTO
 if ($is_guest) {
     $form_input = new FormCheckout();
     
@@ -59,7 +57,7 @@ if ($is_guest) {
     $form_input->via_civico = $val_result->sanitized_params['via_civico'] ?? htmlspecialchars((string)($_POST['via_civico'] ?? ''));
     $form_input->cap        = $val_result->sanitized_params['cap'] ?? htmlspecialchars((string)($_POST['cap'] ?? ''));
     
-    // NOME
+    // nome 
     if (in_array('nome', $val_result->missing_required_params) || trim($_POST['nome'] ?? '') === '') {
         $form_input->nome_err = "Questo campo è obbligatorio.";
     } elseif (isset($val_result->errors['nome'])) {
@@ -71,7 +69,7 @@ if ($is_guest) {
         }
     }
 
-    // COGNOME
+    // cognome
     if (in_array('cognome', $val_result->missing_required_params) || trim($_POST['cognome'] ?? '') === '') {
         $form_input->cognome_err = "Questo campo è obbligatorio.";
     } elseif (isset($val_result->errors['cognome'])) {
@@ -83,7 +81,7 @@ if ($is_guest) {
         }
     }
 
-    // EMAIL
+    // email
     if (in_array('email', $val_result->missing_required_params) || trim($_POST['email'] ?? '') === '') {
         $form_input->email_err = "Questo campo è obbligatorio.";
     } elseif (isset($val_result->errors['email'])) {
@@ -97,7 +95,7 @@ if ($is_guest) {
         }
     }
 
-    // TELEFONO
+    // telefono
     if (in_array('telefono', $val_result->missing_required_params) || trim($_POST['telefono'] ?? '') === '') {
         $form_input->telefono_err = "Questo campo è obbligatorio.";
     } elseif (isset($val_result->errors['telefono'])) {
@@ -113,7 +111,7 @@ if ($is_guest) {
         }
     }
 
-    // VIA CIVICO
+    // via e civico
     if (in_array('via_civico', $val_result->missing_required_params) || trim($_POST['via_civico'] ?? '') === '') {
         $form_input->via_civico_err = "Questo campo è obbligatorio.";
     } elseif (isset($val_result->errors['via_civico'])) {
@@ -125,7 +123,7 @@ if ($is_guest) {
         }
     }
 
-    // CAP
+    // cap
     if (in_array('cap', $val_result->missing_required_params) || trim($_POST['cap'] ?? '') === '') {
         $form_input->cap_err = "Questo campo è obbligatorio.";
     } elseif (isset($val_result->errors['cap'])) {
@@ -157,7 +155,6 @@ if ($is_guest) {
 try {
     $db->beginTransaction();
     
-    // 2. Calcola il totale dal DB per sicurezza
     $ids = array_keys($_SESSION['cart']);
     $placeholders = implode(',', array_fill(0, count($ids), '?'));
     $stmtProd = $db->prepare("SELECT id_prodotto, prezzo FROM tprodotto WHERE id_prodotto IN ($placeholders)");
@@ -177,7 +174,6 @@ try {
         ];
     }
     
-    // 3. Crea l'ordine (Loggato vs Guest)
     if ($is_guest) {
         $cap_for_status = $guest_data['cap'];
         $stato_ordine = str_starts_with($cap_for_status, '34') ? 'confermato_in_preparazione' : 'non_confermato';
@@ -204,13 +200,11 @@ try {
     
     $id_ordine = $db->lastInsertId();
     
-    // 4. Inserisci i dettagli dell'ordine
     $stmtDettaglio = $db->prepare("INSERT INTO tdettaglio_ordine (id_ordine, id_prodotto, quantita, prezzo_unitario_storico) VALUES (?, ?, ?, ?)");
     foreach ($dettagli as $d) {
         $stmtDettaglio->execute([$id_ordine, $d['id_prodotto'], $d['quantita'], $d['prezzo_storico']]);
     }
     
-    // 5. Svuota DB carrello se loggato
     if (!$is_guest) {
         $stmtSvuota = $db->prepare("
             DELETE ip FROM tistanza_prodotto ip
@@ -220,7 +214,6 @@ try {
         $stmtSvuota->execute([$_SESSION['user_id']]);
     }
     
-    // 6. Svuota sessione
     $_SESSION['cart'] = [];
     
     $db->commit();

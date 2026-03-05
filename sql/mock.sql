@@ -12,11 +12,11 @@ TRUNCATE TABLE tprodotto;
 TRUNCATE TABLE tutente;
 SET FOREIGN_KEY_CHECKS = 1;
 
--- 1. UTENTI (Credenziali aggiornate come richiesto)
+-- 1. UTENTI 
 INSERT INTO tutente (nome, cognome, email, password, telefono, via_civico, cap, ruolo) VALUES
 ('cliente', 'cliente', 'cliente@appane.it', '$2y$10$ROKFxIRHDAiBGEfwvvW5bO9m2EXG7VTStrMWM0vToG3oLKFz37Alu', '3331234567', 'Via Roma 1', '34100', 'cliente');
 
--- 2. PRODOTTI (Percorsi per cgi-bin ed estensione .png)
+-- 2. PRODOTTI 
 INSERT INTO tprodotto (id_prodotto, nome_prodotto, prezzo, confezione, tipologia, url_immagine) VALUES
 (1, 'Pane biango (mix farine)', 6.50, 'Pezzo 800g', 'Pane speciale', '../httpdocs/img/prodotti/pane_biango.png'),
 (2, 'Brown sugar', 7.50, 'Pezzo 800g', 'Pane speciale', '../httpdocs/img/prodotti/brown_sugar.png'),

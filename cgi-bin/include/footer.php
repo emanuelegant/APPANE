@@ -1,7 +1,6 @@
 <?php
-// footer.php
 ?>
-</main> <!-- Chiude main-container dal header -->
+</main> 
 
 <footer class="main-footer">
     <p>&copy; <?= date("Y") ?> APPANE - Il Pane che ti Appaga. Tutti i diritti riservati.</p>

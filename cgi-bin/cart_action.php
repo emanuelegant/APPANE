@@ -14,7 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         elseif ($action === 'update') {
             $nuova_quantita = (int)($_POST['quantita'] ?? 0);
 
-            // Trovo la quantità attuale
             $qty_attuale = 0;
             if (isset($_SESSION['cart'][$id_prodotto])) {
                 $qty_attuale = $_SESSION['cart'][$id_prodotto];
@@ -27,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         }
         elseif ($action === 'remove') {
-            // Rimuovi tutto
             if (isset($_SESSION['cart'][$id_prodotto])) {
                 $qty_attuale = $_SESSION['cart'][$id_prodotto];
                 update_cart($db, $id_prodotto, -$qty_attuale);

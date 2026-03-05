@@ -55,7 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $validation_result = validate_post($schema);
 
-    // Salviamo subito quello che ha scritto l'utente (sanificato se valido)
     $form_input->nome       = $validation_result->sanitized_params['nome'] ?? htmlspecialchars((string)($_POST['nome'] ?? ''));
     $form_input->cognome    = $validation_result->sanitized_params['cognome'] ?? htmlspecialchars((string)($_POST['cognome'] ?? ''));
     $form_input->email      = $validation_result->sanitized_params['email'] ?? htmlspecialchars((string)($_POST['email'] ?? ''));
@@ -63,9 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form_input->via_civico = $validation_result->sanitized_params['via_civico'] ?? htmlspecialchars((string)($_POST['via_civico'] ?? ''));
     $form_input->cap        = $validation_result->sanitized_params['cap'] ?? htmlspecialchars((string)($_POST['cap'] ?? ''));
 
-    // GESTIONE ERRORI - Stile esatto PCTO ad IF / ELSE IF a cascata
 
-    // NOME
+    // nome
     if (in_array('nome', $validation_result->missing_required_params) || trim($_POST['nome'] ?? '') === '') {
         $form_input->nome_err = "Questo campo è obbligatorio.";
     } elseif (isset($validation_result->errors['nome'])) {
@@ -77,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // COGNOME
+    // cognome
     if (in_array('cognome', $validation_result->missing_required_params) || trim($_POST['cognome'] ?? '') === '') {
         $form_input->cognome_err = "Questo campo è obbligatorio.";
     } elseif (isset($validation_result->errors['cognome'])) {
@@ -89,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // EMAIL
+    // email
     if (in_array('email', $validation_result->missing_required_params) || trim($_POST['email'] ?? '') === '') {
         $form_input->email_err = "Questo campo è obbligatorio.";
     } elseif (isset($validation_result->errors['email'])) {
@@ -103,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // PASSWORD
+    // password
     if (in_array('password', $validation_result->missing_required_params) || ($_POST['password'] ?? '') === '') {
         $form_input->password_err = "Questo campo è obbligatorio.";
     } elseif (isset($validation_result->errors['password'])) {
@@ -115,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // TELEFONO
+    // telefono
     if (in_array('telefono', $validation_result->missing_required_params) || trim($_POST['telefono'] ?? '') === '') {
         $form_input->telefono_err = "Questo campo è obbligatorio.";
     } elseif (isset($validation_result->errors['telefono'])) {
@@ -131,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // VIA CIVICO
+    // VIA E CIVICO
     if (in_array('via_civico', $validation_result->missing_required_params) || trim($_POST['via_civico'] ?? '') === '') {
         $form_input->via_civico_err = "Questo campo è obbligatorio.";
     } elseif (isset($validation_result->errors['via_civico'])) {
@@ -143,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // CAP
+    // cap
     if (in_array('cap', $validation_result->missing_required_params) || trim($_POST['cap'] ?? '') === '') {
         $form_input->cap_err = "Questo campo è obbligatorio.";
     } elseif (isset($validation_result->errors['cap'])) {

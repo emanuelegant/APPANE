@@ -9,7 +9,6 @@ if (!is_logged_in()) {
 $user_id = $_SESSION['user_id'];
 $isOrderActive = is_order_open();
 
-// Gestione azioni ordine: cancel o modify
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
     $id_ordine = (int)($_POST['id_ordine'] ?? 0);
@@ -25,15 +24,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $stmtCancel->execute([$id_ordine]);
                 $msgSuccess = "Ordine #$id_ordine annullato con successo.";
             } elseif ($action === 'modify') {
-                // Annulla vecchio ordine
                 $stmtCancel = $db->prepare("UPDATE tordine SET stato = 'annullato' WHERE id_ordine = ?");
                 $stmtCancel->execute([$id_ordine]);
                 
-                // Pulisci carrello DB
                 $stmtEmptyCart = $db->prepare("DELETE FROM tistanza_prodotto WHERE id_carrello = (SELECT id_carrello FROM tcarrello WHERE id_utente = ?)");
                 $stmtEmptyCart->execute([$user_id]);
                 
-                // Ricarica carrello in sessione
                 $_SESSION['cart'] = [];
                 $stmtDettagli = $db->prepare("SELECT id_prodotto, quantita FROM tdettaglio_ordine WHERE id_ordine = ?");
                 $stmtDettagli->execute([$id_ordine]);
@@ -49,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     }
 }
 
-// Recupero storico ordini
 $stmt = $db->prepare("
     SELECT o.id_ordine, o.data_ordine, o.stato, o.totale, o.nota_fornitore
     FROM tordine o
@@ -146,7 +141,6 @@ require_once __DIR__ . '/include/header.php';
 </div>
 
 <?php 
-// Imposta le note come lette per questo utente
 $stmtUpdateNotes = $db->prepare("UPDATE tordine SET nota_letta = 1 WHERE id_utente = ? AND nota_fornitore IS NOT NULL AND nota_fornitore != '' AND nota_letta = 0");
 $stmtUpdateNotes->execute([$user_id]);
 

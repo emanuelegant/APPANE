@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // GESTIONE ERRORI
     
-    // EMAIL
+    // email 
     if (in_array('email', $val_result->missing_required_params) || trim($_POST['email'] ?? '') === '') {
         $form_input->email_err = "L'email è obbligatoria.";
     } elseif (isset($val_result->errors['email'])) {
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // PASSWORD
+    // password
     if (in_array('password', $val_result->missing_required_params) || ($_POST['password'] ?? '') === '') {
         $form_input->password_err = "La password è obbligatoria.";
     } elseif (isset($val_result->errors['password'])) {
@@ -61,7 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $has_errors = !is_null($form_input->email_err) || !is_null($form_input->password_err);
 
-    // La password in chiaro dal POST
     $raw_password = (string)($_POST['password'] ?? ''); 
 
     if (!$has_errors) {
