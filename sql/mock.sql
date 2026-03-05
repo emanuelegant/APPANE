@@ -14,8 +14,8 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 -- 1. UTENTI (Credenziali aggiornate come richiesto)
 INSERT INTO tutente (nome, cognome, email, password, telefono, via_civico, cap, ruolo) VALUES
-('admin', 'admin', 'admin@appane.it', 'appane', '0123456789', 'Sede Centrale', '34100', 'admin'),
-('cliente', 'cliente', 'cliente@appane.it', 'cliente', '3331234567', 'Via Roma 1', '34100', 'cliente');
+('admin', 'admin', 'admin@appane.it', '$2y$10$Pnu38CYrgFu703wTO6YrFuxNBGPuQ/vYW3oCIolXTfaaZzUK1T7Qi', '0123456789', 'Sede Centrale', '34100', 'admin'),
+('cliente', 'cliente', 'cliente@appane.it', '$2y$10$ROKFxIRHDAiBGEfwvvW5bO9m2EXG7VTStrMWM0vToG3oLKFz37Alu', '3331234567', 'Via Roma 1', '34100', 'cliente');
 
 -- 2. PRODOTTI (Percorsi per cgi-bin ed estensione .png)
 INSERT INTO tprodotto (id_prodotto, nome_prodotto, prezzo, confezione, tipologia, url_immagine) VALUES
