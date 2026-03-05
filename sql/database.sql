@@ -24,7 +24,8 @@ CREATE TABLE tprodotto (
     nome_prodotto VARCHAR(150) NOT NULL,
     prezzo DECIMAL(10,2) NOT NULL,
     confezione VARCHAR(50) NOT NULL, 
-    tipologia ENUM('Pane speciale', 'Pizza intera', 'Brioche') NOT NULL
+    tipologia ENUM('Pane speciale', 'Pizza intera', 'Brioche') NOT NULL,
+    url_immagine VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE tingrediente (
