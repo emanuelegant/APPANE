@@ -22,7 +22,7 @@ require_once __DIR__ . '/include/header.php';
 <div class="text-center" style="margin-bottom: 2rem;">
 
     <h1 style="color: var(--primary-color);">Menù Settimanale 🍞</h1>
-    <p>Il pane speciale artigianale, le pizze e i croissant consegnati direttamente a casa tua.</p>
+    <p>I prodotti artigianali con le materie prime della settimana.</p>
 </div>
 
 <?php if (!$isOrderActive): ?>
@@ -79,11 +79,13 @@ require_once __DIR__ . '/include/header.php';
 </div>
 
 <?php if (isset($_SESSION['cart']) && array_sum($_SESSION['cart']) > 0): ?>
-    <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+    <div id="floating-cart-btn" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
         <a href="cart.php" class="btn btn-accent" style="box-shadow: 0 4px 10px rgba(0,0,0,0.5); font-size: 1.2rem; border-radius: 50px; padding: 15px 30px; display: flex; align-items: center; gap: 8px;">
-            🛒 Procedi all'Ordine (<?= array_sum($_SESSION['cart']) ?>)
+            🛒 Procedi all'Ordine (<span class="floating-btn-count"><?= array_sum($_SESSION['cart']) ?></span>)
         </a>
     </div>
 <?php endif; ?>
+
+<script src="/APPANE.V1/httpdocs/js/index.js"></script>
 
 <?php require_once __DIR__ . '/include/footer.php'; ?>

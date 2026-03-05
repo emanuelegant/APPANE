@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($id_prodotto > 0) {
         if ($action === 'add') {
             $quantita = (int)($_POST['quantita'] ?? 1);
-            update_cart($db, $id_prodotto, $quantita); // Aggiunge X
+            update_cart($db, $id_prodotto, $quantita);
 
         }
         elseif ($action === 'update') {
@@ -33,6 +33,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 update_cart($db, $id_prodotto, -$qty_attuale);
             }
         }
+    }
+
+    if (isset($_POST['ajax']) && $_POST['ajax'] === '1') {
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true,
+            'cart_count' => isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0
+        ]);
+        exit;
     }
 }
 

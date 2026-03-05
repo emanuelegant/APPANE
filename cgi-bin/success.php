@@ -23,7 +23,7 @@ require_once __DIR__ . '/include/header.php';
     <div style="background-color: var(--bg-color); padding: 15px; border-radius: 8px; margin-top: 15px; text-align: left; border: 2px solid var(--secondary-color);">
         <p><strong>Dettagli Consegna & Pagamento:</strong></p>
         <ul style="margin-left: 20px; margin-top: 10px;">
-            <li>Ti ricordiamo che il pagamento avviene <strong>esclusivamente in contanti alla consegna</strong>.</li>
+            <li>Ti ricordiamo che il pagamento avviene <strong>esclusivamente alla consegna in qualsiasi forma</strong>.</li>
             <li>Consegniamo solo nella provincia di Trieste (CAP 34***).</li>
             <li>Le consegne avvengono comodamente nel weekend direttamente a casa tua.</li>
         </ul>

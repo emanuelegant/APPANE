@@ -62,8 +62,10 @@ CREATE TABLE tordine (
     id_ordine INT AUTO_INCREMENT PRIMARY KEY,
     id_utente INT NOT NULL,
     data_ordine DATETIME DEFAULT CURRENT_TIMESTAMP,
-    stato ENUM('ricevuto', 'in_preparazione', 'in_consegna', 'consegnato', 'annullato') DEFAULT 'ricevuto',
+    stato ENUM('non_confermato', 'confermato_in_preparazione', 'consegnato', 'annullato') DEFAULT 'non_confermato',
     totale DECIMAL(10,2) NOT NULL,
+    nota_fornitore TEXT DEFAULT NULL,
+    nota_letta BOOLEAN DEFAULT 0,
     FOREIGN KEY (id_utente) REFERENCES tutente(id_utente) ON DELETE CASCADE
 );
 
@@ -80,7 +82,8 @@ CREATE TABLE tdettaglio_ordine (
 CREATE TABLE tmenu (
     id_menu INT AUTO_INCREMENT PRIMARY KEY,
     nome_menu VARCHAR(100) NOT NULL,
-    data_creazione DATETIME DEFAULT CURRENT_TIMESTAMP
+    data_creazione DATETIME DEFAULT CURRENT_TIMESTAMP,
+    stato ENUM('attivo', 'non_attivo') DEFAULT 'non_attivo'
 );
 
 CREATE TABLE tmenu_prodotto (
@@ -90,4 +93,3 @@ CREATE TABLE tmenu_prodotto (
     FOREIGN KEY (id_menu) REFERENCES tmenu(id_menu) ON DELETE CASCADE,
     FOREIGN KEY (id_prodotto) REFERENCES tprodotto(id_prodotto) ON DELETE CASCADE
 );
-

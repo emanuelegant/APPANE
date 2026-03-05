@@ -6,7 +6,6 @@ if (!is_order_open() || empty($_SESSION['cart'])) {
     exit;
 }
 
-// Includiamo la definizione della classe qui affinché la deserializzazione dalla sessione funzioni
 class FormCheckout {
     public ?string $nome = null;
     public ?string $nome_err = null;
@@ -29,7 +28,6 @@ class FormCheckout {
     public ?string $gen_err = null;
 }
 
-// Recupera lo stato del form salvato dal processo di checkout, oppure creane uno vuoto
 if (isset($_SESSION['checkout_form_state'])) {
     $form_input = unserialize($_SESSION['checkout_form_state']);
     unset($_SESSION['checkout_form_state']);

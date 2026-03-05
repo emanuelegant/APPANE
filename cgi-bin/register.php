@@ -42,6 +42,7 @@ if (isset($_GET['via_civico'])) $form_input->via_civico = $_GET['via_civico'];
 if (isset($_GET['cap'])) $form_input->cap = $_GET['cap'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
     $schema = [
         'nome'       => 'string(2,100)',
         'cognome'    => 'string(2,100)',
@@ -53,54 +54,116 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
 
     $validation_result = validate_post($schema);
-    
-    foreach ($validation_result->missing_required_params as $missing) {
-        $err_prop = $missing . '_err';
-        $form_input->$err_prop = "Questo campo è obbligatorio.";
-    }
 
-    foreach ($validation_result->errors as $field => $errObj) {
-        $err_prop = $field . '_err';
-        if ($errObj instanceof StringErrors) {
-            if ($errObj->less_than_minlen) $form_input->$err_prop = "Il testo è troppo corto.";
-            if ($errObj->greater_than_maxlen) $form_input->$err_prop = "Il testo è troppo lungo.";
-            if ($errObj->differs_from_tgtlen) $form_input->$err_prop = "Lunghezza non valida.";
-        } elseif ($errObj instanceof NumericErrors) {
-            if ($errObj->not_numeric) $form_input->$err_prop = "Deve contenere solo numeri.";
-            if ($errObj->less_than_minlen || $errObj->greater_than_maxlen || $errObj->differs_from_tgtlen) {
-                $form_input->$err_prop = "Lunghezza numerica non valida.";
-            }
-        } elseif ($errObj instanceof EmailErrors) {
-            if ($errObj->is_empty) $form_input->$err_prop = "L'email non può essere vuota.";
-            if ($errObj->missing_at_symbol) $form_input->$err_prop = "Manca la chiocciola (@) nell'email.";
-            if ($errObj->is_too_long) $form_input->$err_prop = "L'email è troppo lunga.";
+    // Salviamo subito quello che ha scritto l'utente (sanificato se valido)
+    $form_input->nome       = $validation_result->sanitized_params['nome'] ?? htmlspecialchars((string)($_POST['nome'] ?? ''));
+    $form_input->cognome    = $validation_result->sanitized_params['cognome'] ?? htmlspecialchars((string)($_POST['cognome'] ?? ''));
+    $form_input->email      = $validation_result->sanitized_params['email'] ?? htmlspecialchars((string)($_POST['email'] ?? ''));
+    $form_input->telefono   = $validation_result->sanitized_params['telefono'] ?? htmlspecialchars((string)($_POST['telefono'] ?? ''));
+    $form_input->via_civico = $validation_result->sanitized_params['via_civico'] ?? htmlspecialchars((string)($_POST['via_civico'] ?? ''));
+    $form_input->cap        = $validation_result->sanitized_params['cap'] ?? htmlspecialchars((string)($_POST['cap'] ?? ''));
+
+    // GESTIONE ERRORI - Stile esatto PCTO ad IF / ELSE IF a cascata
+
+    // NOME
+    if (in_array('nome', $validation_result->missing_required_params) || trim($_POST['nome'] ?? '') === '') {
+        $form_input->nome_err = "Questo campo è obbligatorio.";
+    } elseif (isset($validation_result->errors['nome'])) {
+        $nome_err = $validation_result->errors['nome'];
+        if ($nome_err->less_than_minlen) {
+            $form_input->nome_err = "Il nome deve avere almeno 2 caratteri.";
+        } elseif ($nome_err->greater_than_maxlen) {
+            $form_input->nome_err = "Il nome supera i 100 caratteri ammessi.";
         }
     }
 
-    foreach (['nome', 'cognome', 'email', 'telefono', 'via_civico', 'cap'] as $f) {
-        if (isset($validation_result->sanitized_params[$f])) {
-            $form_input->$f = $validation_result->sanitized_params[$f];
-        } elseif (isset($_POST[$f])) {
-            $form_input->$f = htmlspecialchars((string)$_POST[$f]);
+    // COGNOME
+    if (in_array('cognome', $validation_result->missing_required_params) || trim($_POST['cognome'] ?? '') === '') {
+        $form_input->cognome_err = "Questo campo è obbligatorio.";
+    } elseif (isset($validation_result->errors['cognome'])) {
+        $cognome_err = $validation_result->errors['cognome'];
+        if ($cognome_err->less_than_minlen) {
+            $form_input->cognome_err = "Il cognome deve avere almeno 2 caratteri.";
+        } elseif ($cognome_err->greater_than_maxlen) {
+            $form_input->cognome_err = "Il cognome supera i 100 caratteri ammessi.";
         }
     }
 
-    if (is_null($form_input->cap_err) && isset($form_input->cap)) {
-        if (!str_starts_with($form_input->cap, '34')) {
-            $form_input->cap_err = "Consegniamo solo nella provincia di Trieste (CAP 34xxx).";
+    // EMAIL
+    if (in_array('email', $validation_result->missing_required_params) || trim($_POST['email'] ?? '') === '') {
+        $form_input->email_err = "Questo campo è obbligatorio.";
+    } elseif (isset($validation_result->errors['email'])) {
+        $email_err = $validation_result->errors['email'];
+        if ($email_err->is_empty) {
+            $form_input->email_err = "Questo campo è obbligatorio.";
+        } elseif ($email_err->missing_at_symbol) {
+             $form_input->email_err = "L'email deve contenere la chiocciola (@).";
+        } elseif ($email_err->is_too_long) {
+            $form_input->email_err = "L'email inserita è troppo lunga.";
         }
     }
 
-    if (is_null($form_input->telefono_err) && isset($form_input->telefono)) {
-        if (!preg_match('/^\+?[0-9\s]+$/', $form_input->telefono)) {
-            $form_input->telefono_err = "Il numero di telefono può contenere solo numeri e il prefisso (+).";
+    // PASSWORD
+    if (in_array('password', $validation_result->missing_required_params) || ($_POST['password'] ?? '') === '') {
+        $form_input->password_err = "Questo campo è obbligatorio.";
+    } elseif (isset($validation_result->errors['password'])) {
+        $password_err = $validation_result->errors['password'];
+        if ($password_err->less_than_minlen) {
+            $form_input->password_err = "La password deve avere almeno 6 caratteri.";
+        } elseif ($password_err->greater_than_maxlen) {
+            $form_input->password_err = "La password inserita è troppo lunga (max 100).";
         }
     }
+
+    // TELEFONO
+    if (in_array('telefono', $validation_result->missing_required_params) || trim($_POST['telefono'] ?? '') === '') {
+        $form_input->telefono_err = "Questo campo è obbligatorio.";
+    } elseif (isset($validation_result->errors['telefono'])) {
+        $telefono_err = $validation_result->errors['telefono'];
+        if ($telefono_err->less_than_minlen) {
+            $form_input->telefono_err = "Il numero di telefono è troppo corto.";
+        } elseif ($telefono_err->greater_than_maxlen) {
+            $form_input->telefono_err = "Il numero di telefono inserito è troppo lungo.";
+        }
+    } elseif (isset($validation_result->sanitized_params['telefono'])) {
+        if (!preg_match('/^\+?[0-9\s]+$/', $validation_result->sanitized_params['telefono'])) {
+            $form_input->telefono_err = "Il telefono può contenere solo numeri e il prefisso (+).";
+        }
+    }
+
+    // VIA CIVICO
+    if (in_array('via_civico', $validation_result->missing_required_params) || trim($_POST['via_civico'] ?? '') === '') {
+        $form_input->via_civico_err = "Questo campo è obbligatorio.";
+    } elseif (isset($validation_result->errors['via_civico'])) {
+        $via_civico_err = $validation_result->errors['via_civico'];
+        if ($via_civico_err->less_than_minlen) {
+            $form_input->via_civico_err = "L'indirizzo inserito è troppo corto (min. 5 caratteri).";
+        } elseif ($via_civico_err->greater_than_maxlen) {
+            $form_input->via_civico_err = "L'indirizzo inserito è troppo lungo.";
+        }
+    }
+
+    // CAP
+    if (in_array('cap', $validation_result->missing_required_params) || trim($_POST['cap'] ?? '') === '') {
+        $form_input->cap_err = "Questo campo è obbligatorio.";
+    } elseif (isset($validation_result->errors['cap'])) {
+        $cap_err = $validation_result->errors['cap'];
+        if ($cap_err->not_numeric) {
+            $form_input->cap_err = "Il CAP inserito deve contenere esclusivamente numeri.";
+        } elseif ($cap_err->less_than_minlen) {
+            $form_input->cap_err = "Il CAP deve essere di esattamente 5 cifre.";
+        } elseif ($cap_err->greater_than_maxlen) {
+            $form_input->cap_err = "Il CAP deve essere di esattamente 5 cifre.";
+        } elseif ($cap_err->differs_from_tgtlen) {
+            $form_input->cap_err = "Il CAP deve essere di esattamente 5 cifre.";
+        }
+    }
+
 
     $has_errors = !is_null($form_input->nome_err) || !is_null($form_input->cognome_err) || 
                   !is_null($form_input->email_err) || !is_null($form_input->password_err) || 
                   !is_null($form_input->telefono_err) || !is_null($form_input->via_civico_err) || 
-                  !is_null($form_input->cap_err);
+                  !is_null($form_input->cap_err) || !is_null($form_input->gen_err);
 
     if (!$has_errors) {
         $s = $validation_result->sanitized_params;
@@ -108,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtCheck = $db->prepare("SELECT COUNT(*) FROM tutente WHERE email = ?");
         $stmtCheck->execute([$s['email']]);
         if ($stmtCheck->fetchColumn() > 0) {
-            $form_input->email_err = "Questa email è già registrata nell'applicazione.";
+            $form_input->email_err = "Questa email è già registrata.";
         } else {
             $hashedPassword = password_hash($s['password'], PASSWORD_BCRYPT);
             $stmtInsert = $db->prepare("
@@ -141,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($db->inTransaction()) {
                     $db->rollBack();
                 }
-                $form_input->gen_err = "Errore durante la registrazione. Riprova più tardi.";
+                $form_input->gen_err = "Errore database. Riprova più tardi.";
             }
         }
     }
@@ -160,7 +223,9 @@ require_once __DIR__ . '/include/header.php';
         </div>
     <?php else: ?>
         <?php if (!is_null($form_input->gen_err)): ?>
-            <div class="alert alert-error"><?= htmlspecialchars($form_input->gen_err) ?></div>
+            <div class="alert alert-error text-center mb-1">
+                <strong>⚠️</strong> <?= htmlspecialchars((string)$form_input->gen_err) ?>
+            </div>
         <?php endif; ?>
 
         <form method="POST" action="register.php" class="mt-1">
@@ -171,7 +236,7 @@ require_once __DIR__ . '/include/header.php';
             <div class="form-group">
                 <label for="nome">Nome</label>
                 <input type="text" name="nome" id="nome" value="<?= htmlspecialchars((string)$form_input->nome) ?>" maxlength="100" class="<?= is_null($form_input->nome_err) ? '' : 'campo-errore' ?>">
-                <div style="margin-top: 4px; <?= is_null($form_input->nome_err) ? 'display:none' : '' ?>">
+                <div style="<?= is_null($form_input->nome_err) ? 'display:none' : '' ?>">
                     <span class="errore"><?= htmlspecialchars((string)$form_input->nome_err) ?></span>
                 </div>
             </div>
@@ -179,7 +244,7 @@ require_once __DIR__ . '/include/header.php';
             <div class="form-group">
                 <label for="cognome">Cognome</label>
                 <input type="text" name="cognome" id="cognome" value="<?= htmlspecialchars((string)$form_input->cognome) ?>" maxlength="100" class="<?= is_null($form_input->cognome_err) ? '' : 'campo-errore' ?>">
-                <div style="margin-top: 4px; <?= is_null($form_input->cognome_err) ? 'display:none' : '' ?>">
+                <div style="<?= is_null($form_input->cognome_err) ? 'display:none' : '' ?>">
                     <span class="errore"><?= htmlspecialchars((string)$form_input->cognome_err) ?></span>
                 </div>
             </div>
@@ -187,7 +252,7 @@ require_once __DIR__ . '/include/header.php';
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" name="email" id="email" value="<?= htmlspecialchars((string)$form_input->email) ?>" maxlength="320" class="<?= is_null($form_input->email_err) ? '' : 'campo-errore' ?>">
-                <div style="margin-top: 4px; <?= is_null($form_input->email_err) ? 'display:none' : '' ?>">
+                <div style="<?= is_null($form_input->email_err) ? 'display:none' : '' ?>">
                     <span class="errore"><?= htmlspecialchars((string)$form_input->email_err) ?></span>
                 </div>
             </div>
@@ -195,7 +260,7 @@ require_once __DIR__ . '/include/header.php';
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" name="password" id="password" maxlength="100" class="<?= is_null($form_input->password_err) ? '' : 'campo-errore' ?>">
-                <div style="margin-top: 4px; <?= is_null($form_input->password_err) ? 'display:none' : '' ?>">
+                <div style="<?= is_null($form_input->password_err) ? 'display:none' : '' ?>">
                     <span class="errore"><?= htmlspecialchars((string)$form_input->password_err) ?></span>
                 </div>
             </div>
@@ -203,7 +268,7 @@ require_once __DIR__ . '/include/header.php';
             <div class="form-group">
                 <label for="telefono">Telefono</label>
                 <input type="text" name="telefono" id="telefono" value="<?= htmlspecialchars((string)$form_input->telefono) ?>" maxlength="20" class="<?= is_null($form_input->telefono_err) ? '' : 'campo-errore' ?>">
-                <div style="margin-top: 4px; <?= is_null($form_input->telefono_err) ? 'display:none' : '' ?>">
+                <div style="<?= is_null($form_input->telefono_err) ? 'display:none' : '' ?>">
                     <span class="errore"><?= htmlspecialchars((string)$form_input->telefono_err) ?></span>
                 </div>
             </div>
@@ -211,15 +276,15 @@ require_once __DIR__ . '/include/header.php';
             <div class="form-group">
                 <label for="via_civico">Via e Civico</label>
                 <input type="text" name="via_civico" id="via_civico" value="<?= htmlspecialchars((string)$form_input->via_civico) ?>" maxlength="255" class="<?= is_null($form_input->via_civico_err) ? '' : 'campo-errore' ?>">
-                <div style="margin-top: 4px; <?= is_null($form_input->via_civico_err) ? 'display:none' : '' ?>">
+                <div style="<?= is_null($form_input->via_civico_err) ? 'display:none' : '' ?>">
                     <span class="errore"><?= htmlspecialchars((string)$form_input->via_civico_err) ?></span>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="cap">CAP (Consegne solo 34***)</label>
+                <label for="cap">CAP (Consegne assicurate: 34***)</label>
                 <input type="text" name="cap" id="cap" placeholder="Es. 34100" value="<?= htmlspecialchars((string)$form_input->cap) ?>" maxlength="5" class="<?= is_null($form_input->cap_err) ? '' : 'campo-errore' ?>">
-                <div style="margin-top: 4px; <?= is_null($form_input->cap_err) ? 'display:none' : '' ?>">
+                <div style="<?= is_null($form_input->cap_err) ? 'display:none' : '' ?>">
                     <span class="errore"><?= htmlspecialchars((string)$form_input->cap_err) ?></span>
                 </div>
             </div>
