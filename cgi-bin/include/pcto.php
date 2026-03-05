@@ -169,15 +169,17 @@ function validate_post(array $schema): PostValidationResult
     return $to_return;
 }
 
-/**
- * Connessione al DB Appane
- */
+
 function connectToDb(): PDO
 {
     $host = 'localhost';
     $db = 'appane_parodi';
     $user = 'root';
-    $pass = ''; // Modificare in base all'utente MySQL. Per XAMPP di default è vuoto.
+    $pass = ''; 
+    /*
+    $user = 'quintae';
+    $pass = 'Qu!nta'; 
+    */
 
     $dsn = "mysql:host=$host;dbname=$db;charset=utf8mb4";
     $options = [

@@ -1,5 +1,4 @@
 <?php
-// header.php
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -7,8 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>APPANE - Il Pane che ti Appaga</title>
-    <!-- Usa un percorso assoluto per XAMPP per non perdere mai il CSS -->
-    <link rel="stylesheet" href="/APPANE/httpdocs/css/stile.css">
+    <link rel="stylesheet" href="/APPANE.V1/httpdocs/css/stile.css">
+    <!-- DA USARE A SCUOLA!!  <link rel="stylesheet" href="../httpdocs/css/stile.css"> -->
 </head>
 <body>
 

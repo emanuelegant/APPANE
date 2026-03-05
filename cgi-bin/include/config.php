@@ -15,11 +15,7 @@ function is_logged_in(): bool
     return isset($_SESSION['user_id']);
 }
 
-/**
- * Verifica se ci troviamo nel periodo in cui è possibile ordinare
- * (Da Lunedì 00:00 a Giovedì 23:59)
- * TEMP: Restituisce sempre true per facilitare i test!
- */
+
 function is_order_open(): bool
 {
     // $current_day = (int)date('N');
